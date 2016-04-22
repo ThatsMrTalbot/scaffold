@@ -1,7 +1,7 @@
 # Scaffold
 _Simple context aware router_
 
-[![GoDoc](https://godoc.org/github.com/ThatsMrTalbot/scaffold?status.svg)](https://godoc.org/github.com/ThatsMrTalbot/scaffold) [![Coverage Status](https://coveralls.io/repos/github/ThatsMrTalbot/scaffold/badge.svg?branch=master)](https://coveralls.io/github/ThatsMrTalbot/scaffold?branch=master) [![Build Status](https://travis-ci.org/ThatsMrTalbot/scaffold.svg?branch=master)](https://travis-ci.org/ThatsMrTalbot/scaffold)
+[![GoDoc](https://godoc.org/github.com/ThatsMrTalbot/scaffold?status.svg)](https://godoc.org/github.com/ThatsMrTalbot/scaffold) [![Coverage Status](https://coveralls.io/repos/github/ThatsMrTalbot/scaffold/badge.svg?branch=master)](https://coveralls.io/github/ThatsMrTalbot/scaffold?branch=master) [![Build Status](https://travis-ci.org/ThatsMrTalbot/scaffold.svg?branch=master)](https://travis-ci.org/ThatsMrTalbot/scaffold) [![Go Report Card](https://goreportcard.com/badge/github.com/ThatsMrTalbot/scaffold)](https://goreportcard.com/report/github.com/ThatsMrTalbot/scaffold)
 
 Scaffold is a simple router with middleware support.
 It allows for alternate dispatchers.
