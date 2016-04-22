@@ -93,18 +93,18 @@ func (d *dispatcher) CtxServeHTTP(ctx context.Context, w http.ResponseWriter, r 
 	}
 	h2, m2, _ = d.resolve(r.Method, parts)
 
-	if h := d.notFoundHandler(r.Method, h1, h2); h != nil {
-		for _, m := range m1 {
-			h = m(h)
-		}
-		for _, m := range m2 {
-			h = m(h)
-		}
-		h.CtxServeHTTP(ctx, w, r)
-		return
+	h := d.notFoundHandler(r.Method, h1, h2)
+	if h == nil {
+		h = NotFoundHandler
 	}
 
-	http.NotFound(w, r)
+	for _, m := range m1 {
+		h = m(h)
+	}
+	for _, m := range m2 {
+		h = m(h)
+	}
+	h.CtxServeHTTP(ctx, w, r)
 }
 
 func (d *dispatcher) ServeHTTP(w http.ResponseWriter, r *http.Request) {

@@ -28,3 +28,11 @@ func (h HandlerList) CtxServeHTTP(ctx context.Context, w http.ResponseWriter, r 
 		handler.CtxServeHTTP(ctx, w, r)
 	}
 }
+
+// NotFound wraps http.NotFound
+func NotFound(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	http.NotFound(w, r)
+}
+
+// NotFoundHandler is a not found handler
+var NotFoundHandler Handler = HandlerFunc(NotFound)
