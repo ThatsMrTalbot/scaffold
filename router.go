@@ -22,7 +22,7 @@ func Scaffold(d Dispatcher, platform Platform) Handler {
 	return router.dispatcher
 }
 
-// Host lets you specify the host(s) the route is avaiable for
+// Host lets you specify the host(s) the route is available for
 func (r *Router) Host(hosts ...string) *Router {
 	c := r.route.clone()
 	c.Hosts = hosts
