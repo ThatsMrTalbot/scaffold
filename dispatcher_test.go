@@ -38,7 +38,7 @@ func TestDispatcherRoutes(t *testing.T) {
 
 				Convey(convey, t, func() {
 
-					d := DefaultDispacher()
+					d := DefaultDispatcher()
 					r := NewRoute(host, method, pattern)
 					handler := NewMockHandler()
 
@@ -92,7 +92,7 @@ func TestDispatcherRoutes(t *testing.T) {
 	// Code coverage OCD
 
 	Convey("Given a route", t, func() {
-		d := DefaultDispacher()
+		d := DefaultDispatcher()
 		r := NewRoute("", "", "")
 
 		Convey("When no handlers are provied", func() {
@@ -105,7 +105,7 @@ func TestDispatcherRoutes(t *testing.T) {
 	})
 
 	Convey("Given a route with a host", t, func() {
-		d := DefaultDispacher()
+		d := DefaultDispatcher()
 		r := NewRoute("example.com", "", "")
 		h := NewMockHandler()
 
@@ -139,7 +139,7 @@ func TestDispatcherNotFound(t *testing.T) {
 
 				Convey(convey, t, func() {
 
-					d := DefaultDispacher()
+					d := DefaultDispatcher()
 					r := NewRoute(host, method, pattern)
 					handler := NewMockHandler()
 
@@ -211,7 +211,7 @@ func TestDispacherMiddleware(t *testing.T) {
 
 				Convey(convey, t, func() {
 
-					d := DefaultDispacher()
+					d := DefaultDispatcher()
 					r1 := NewRoute(host, method, middleware[i])
 					r2 := NewRoute(host, method, pattern)
 					middleware := NewMockMiddleware()
@@ -271,7 +271,7 @@ func TestDispacherMiddleware(t *testing.T) {
 	// Code coverage OCD
 
 	Convey("Given a route", t, func() {
-		d := DefaultDispacher()
+		d := DefaultDispatcher()
 		r := NewRoute("", "", "")
 
 		Convey("When no middleware is provied", func() {
@@ -299,7 +299,7 @@ type MockDispatcher struct {
 
 func NewMockDispatcher() *MockDispatcher {
 	return &MockDispatcher{
-		Dispatcher: DefaultDispacher(),
+		Dispatcher: DefaultDispatcher(),
 	}
 }
 

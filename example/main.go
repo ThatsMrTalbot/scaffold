@@ -9,7 +9,7 @@ import (
 func main() {
 	app := NewApp()
 
-	dispatcher := scaffold.DefaultDispacher()
+	dispatcher := scaffold.DefaultDispatcher()
 	scaffold.Scaffold(dispatcher, app)
 
 	http.ListenAndServe(":8080", dispatcher)

@@ -24,8 +24,8 @@ type dispatcher struct {
 	hosts map[string]*node
 }
 
-// DefaultDispacher implements dispatcher allowing for basic url params
-func DefaultDispacher() Dispatcher {
+// DefaultDispatcher implements dispatcher allowing for basic url params
+func DefaultDispatcher() Dispatcher {
 	return &dispatcher{
 		node:  newNode(0),
 		hosts: make(map[string]*node),
