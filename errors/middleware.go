@@ -20,6 +20,14 @@ type ErrorHandler interface {
 	ServeErrorPage(ctx context.Context, w http.ResponseWriter, r *http.Request, status int, err error)
 }
 
+// ErrorHandlerFunc is an error handler
+type ErrorHandlerFunc func(ctx context.Context, w http.ResponseWriter, r *http.Request, status int, err error)
+
+// ServeErrorPage Implements ErrorHandler.ServeErrorPage
+func (e ErrorHandlerFunc) ServeErrorPage(ctx context.Context, w http.ResponseWriter, r *http.Request, status int, err error) {
+	e(ctx, w, r, status, err)
+}
+
 type defaultErrorHandler struct{}
 
 func (*defaultErrorHandler) ServeErrorPage(ctx context.Context, w http.ResponseWriter, r *http.Request, status int, err error) {
@@ -51,4 +59,9 @@ func SetErrorHandler(status int, handler ErrorHandler) scaffold.Middleware {
 			next.CtxServeHTTP(ctx, w, r)
 		})
 	})
+}
+
+// SetErrorHandlerFunc returns Middleware that can be used to set the error handler
+func SetErrorHandlerFunc(status int, handler func(ctx context.Context, w http.ResponseWriter, r *http.Request, status int, err error)) scaffold.Middleware {
+	return SetErrorHandler(status, ErrorHandlerFunc(handler))
 }
