@@ -90,15 +90,25 @@ func (n *node) resolve(method string, parts []string) (Handler, []Middleware, bo
 
 	var h1, h2 Handler
 	var m2 []Middleware
+	var ok1, ok2 bool
+
 	if c, ok := n.children[next]; ok {
-		if h1, m2, ok = c.resolve(method, parts); ok {
-			return h1, append(m1, m2...), ok
+		if h1, m2, ok1 = c.resolve(method, parts); ok {
+			m1 = append(m1, m2...)
 		}
 	}
 	if c, ok := n.children[""]; ok {
-		if h2, m2, ok = c.resolve(method, parts); ok {
-			return h2, append(m1, m2...), ok
+		if h2, m2, ok2 = c.resolve(method, parts); ok {
+			m1 = append(m1, m2...)
 		}
+	}
+
+	if ok1 {
+		return h1, m1, true
+	}
+
+	if ok2 {
+		return h2, m1, true
 	}
 
 	return n.notFoundHandler(method, h1, h2), m1, false

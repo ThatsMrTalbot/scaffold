@@ -1,8 +1,12 @@
 package scaffold
 
 import (
+	"errors"
 	"fmt"
+	"net/http"
 	"testing"
+
+	"golang.org/x/net/context"
 
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -13,7 +17,7 @@ func TestRouter(t *testing.T) {
 		d := NewMockDispatcher()
 		r := New(d)
 
-		methods := map[string]func(pattern string, handlers ...Handler) *Router{
+		methods := map[string]func(pattern string, handlers ...interface{}) *Router{
 			"OPTIONS": r.Options,
 			"GET":     r.Get,
 			"HEAD":    r.Head,
@@ -22,6 +26,33 @@ func TestRouter(t *testing.T) {
 			"DELETE":  r.Delete,
 			"":        r.Handle,
 		}
+
+		Convey("When a handler function is added", func() {
+			r = r.Handle("somepath", h.CtxServeHTTP)
+
+			Convey("Then handler should be added", func() {
+				So(d.HandlerHasBeenCalled, ShouldBeTrue)
+				So(d.Route, ShouldNotBeNil)
+			})
+		})
+
+		Convey("When a http handler is added", func() {
+			r = r.Handle("somepath", http.NotFoundHandler())
+
+			Convey("Then handler should be added", func() {
+				So(d.HandlerHasBeenCalled, ShouldBeTrue)
+				So(d.Route, ShouldNotBeNil)
+			})
+		})
+
+		Convey("When a http handler function is added", func() {
+			r = r.Handle("somepath", http.NotFound)
+
+			Convey("Then handler should be added", func() {
+				So(d.HandlerHasBeenCalled, ShouldBeTrue)
+				So(d.Route, ShouldNotBeNil)
+			})
+		})
 
 		for method, handler := range methods {
 			when := fmt.Sprintf("When a route with method `%s` is added", method)
@@ -89,10 +120,21 @@ func TestRouter(t *testing.T) {
 			})
 		})
 
+		Convey("When http middlware is added", func() {
+			middleware := func(next http.Handler) http.Handler {
+				return next
+			}
+			r.Use(middleware)
+
+			Convey("Then the middleware should be added", func() {
+				So(d.MiddlewareHasBeenCalled, ShouldBeTrue)
+			})
+		})
+
 		Convey("When middleware function is added", func() {
 			m := NewMockMiddleware()
-			middleware := m.Middleware()
-			r.UseFunc(middleware)
+			middleware := (func(Handler) Handler)(m.Middleware())
+			r.Use(middleware)
 
 			Convey("Then the middleware should be added", func() {
 				So(d.MiddlewareHasBeenCalled, ShouldBeTrue)
@@ -108,6 +150,36 @@ func TestRouter(t *testing.T) {
 				So(d.NotFound, ShouldEqual, h)
 			})
 		})
+	})
+
+	Convey("Given a handler builder", t, func() {
+		b := func(i interface{}) (Handler, error) {
+			if s, ok := i.(string); ok {
+				return HandlerFunc(func(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+					w.Write([]byte(s))
+				}), nil
+			}
+			return nil, errors.New("Not a string")
+		}
+		d := NewMockDispatcher()
+		r := New(d)
+		r.AddHandlerBuilder(b)
+
+		Convey("When the a var that can be built into a handler is routed", func() {
+			r.Handle("somepath", "hello")
+
+			Convey("Then the generated handler should be added", func() {
+				So(d.HandlerHasBeenCalled, ShouldBeTrue)
+				So(d.Route, ShouldNotBeNil)
+			})
+		})
+
+		Convey("When the a var that cannot be built into a handler is routed", func() {
+			Convey("Then router should panic", func() {
+				So(func() { r.Handle("somepath", 123) }, ShouldPanic)
+			})
+		})
+
 	})
 
 	Convey("Given a platform", t, func() {
