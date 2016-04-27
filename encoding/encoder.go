@@ -71,7 +71,7 @@ func (e *Encoder) Responder(r *http.Request) Responder {
 }
 
 // HandlerBuilder can be used in scaffold to create handlers based on function
-func (s *Selector) HandlerBuilder(handler interface{}) (scaffold.Handler, error) {
+func (e *Encoder) HandlerBuilder(handler interface{}) (scaffold.Handler, error) {
 	typ := reflect.TypeOf(handler)
 
 	if typ.Kind() != reflect.Func {
@@ -90,7 +90,7 @@ func (s *Selector) HandlerBuilder(handler interface{}) (scaffold.Handler, error)
 	}
 
 	params[0] = func(ctx context.Context, w http.ResponseWriter, r *http.Request) (reflect.Value, error) {
-		parser := s.Parser(r)
+		parser := e.Parser(r)
 		val := reflect.New(reqTyp)
 		err := parser.Parse(val.Interface(), r)
 		return val.Elem(), err
@@ -115,7 +115,7 @@ func (s *Selector) HandlerBuilder(handler interface{}) (scaffold.Handler, error)
 		}
 	}
 
-	if typ.NumIn() != 2 {
+	if typ.NumOut() != 2 {
 		return nil, errors.New("Invalid handler, must have at two return parameters")
 	}
 
@@ -123,12 +123,12 @@ func (s *Selector) HandlerBuilder(handler interface{}) (scaffold.Handler, error)
 		return nil, errors.New("Invalid handler, first return parameter must be a struct")
 	}
 
-	if typ.Out(0) != reflect.TypeOf((error)(nil)) {
+	if typ.Out(1) != reflect.TypeOf((*error)(nil)).Elem() {
 		return nil, errors.New("Invalid handler, second return parameter must be an error")
 	}
 
 	return &caller{
-		s:      s,
+		e:      e,
 		params: params,
 		caller: reflect.ValueOf(handler),
 	}, nil

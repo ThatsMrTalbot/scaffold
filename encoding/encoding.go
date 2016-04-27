@@ -9,14 +9,17 @@ import (
 	"github.com/pquerna/ffjson/ffjson"
 )
 
+// Responder is a response encoder
 type Responder interface {
 	Respond(status int, w http.ResponseWriter, response interface{}) error
 }
 
+// Parser is a request parser
 type Parser interface {
 	Parse(result interface{}, r *http.Request) error
 }
 
+// Encoding is a encoder
 type Encoding interface {
 	Mime() string
 	Responder
@@ -32,10 +35,6 @@ func readAll(r *http.Request) ([]byte, error) {
 	r.Body = ioutil.NopCloser(bytes.NewBuffer(buf))
 
 	return buf, nil
-}
-
-type errorObj struct {
-	Error string `json:"error" xml:"Error" msgpack:"error"`
 }
 
 type jsonResponder struct{}
