@@ -28,7 +28,7 @@ func HandlerBuilder(i interface{}) (scaffold.Handler, error) {
 	switch i.(type) {
 	case Handler:
 		return build(i.(Handler)), nil
-	case func(context.Context, http.ResponseWriter, *http.Request):
+	case func(context.Context, http.ResponseWriter, *http.Request) error:
 		return build(HandlerFunc(i.(func(context.Context, http.ResponseWriter, *http.Request) error))), nil
 	}
 
