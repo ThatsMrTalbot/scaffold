@@ -116,7 +116,7 @@ func TestRouter(t *testing.T) {
 
 			Convey("Then the middleware should be added", func() {
 				So(d.MiddlewareHasBeenCalled, ShouldBeTrue)
-				So(d.MiddlewareItems, ShouldContain, middleware)
+				So(d.MiddlewareItems, ShouldHaveLength, 1)
 			})
 		})
 
@@ -128,6 +128,7 @@ func TestRouter(t *testing.T) {
 
 			Convey("Then the middleware should be added", func() {
 				So(d.MiddlewareHasBeenCalled, ShouldBeTrue)
+				So(d.MiddlewareItems, ShouldHaveLength, 1)
 			})
 		})
 
@@ -138,7 +139,6 @@ func TestRouter(t *testing.T) {
 
 			Convey("Then the middleware should be added", func() {
 				So(d.MiddlewareHasBeenCalled, ShouldBeTrue)
-				So(d.MiddlewareItems, ShouldContain, middleware)
 			})
 		})
 
