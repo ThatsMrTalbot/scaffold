@@ -15,11 +15,16 @@ func pathSplit(p string) []string {
 	}
 
 	p = path.Clean(p)
+	p = strings.TrimLeft(p, "/")
 	parts := strings.Split(p, "/")
-	if len(parts) > 0 && parts[0] == "" {
-		parts = parts[1:]
+
+	var r []string
+	for _, str := range parts {
+		if str != "" {
+			r = append(r, str)
+		}
 	}
-	return parts
+	return r
 }
 
 // URLParts spliths a path into parts and caches it in the context
