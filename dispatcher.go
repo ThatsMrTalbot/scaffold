@@ -98,11 +98,11 @@ func (d *dispatcher) CtxServeHTTP(ctx context.Context, w http.ResponseWriter, r 
 		h = NotFoundHandler
 	}
 
-	for _, m := range m1 {
-		h = m(h)
+	for i := range m1 {
+		h = m1[len(m1)-1-i](h)
 	}
-	for _, m := range m2 {
-		h = m(h)
+	for i := range m2 {
+		h = m2[len(m2)-1-i](h)
 	}
 	h.CtxServeHTTP(ctx, w, r)
 }
